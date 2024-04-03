@@ -73,15 +73,12 @@ void menu()
 void inicializar()
 {
 
-	// se a lista já possuir elementos
-	// libera a memoria ocupada
 	NO* aux = primeiro;
 	while (aux != NULL) {
 		NO* paraExcluir = aux;
 		aux = aux->prox;
 		free(paraExcluir);
 	}
-
 	primeiro = NULL;
 	cout << "Lista inicializada \n";
 
@@ -128,7 +125,7 @@ void inserirElemento()
 	cin >> novo->valor;
 	novo->prox = NULL;
 	if (posicaoElemento(novo->valor) != NULL) {
-		cout << "Esse valor já se encontra na lista\n";
+		cout << "Esse valor jï¿½ se encontra na lista\n";
 		return;
 	}
 	if (primeiro == NULL)
@@ -151,24 +148,37 @@ void excluirElemento()
 	int valueToDelete = 0;
 	cout << "Digite o valor a ser deletado: \n";
 	cin >> valueToDelete;
-	NO* position = posicaoElemento(valueToDelete);
-	if (position == NULL) {
-		cout << "O valor não foi encontrado para ser deletado\n";
+	NO* knotToDelete = posicaoElemento(valueToDelete);
+	if (knotToDelete == NULL || primeiro == NULL) {
+		cout << "O valor nao foi encontrado para ser deletado ou a lista estÃ¡ vazia\n";
 		return;
 	}
-	if (position->prox != NULL) {
-		NO* nextKnot = position->prox;
-		if (nextKnot->prox != NULL) {
-			position->valor = nextKnot->valor;
-			position->prox = nextKnot->prox;
-			cout << "Lista atual\n";
-			exibirElementos();
+	if (knotToDelete->prox != NULL) {
+		NO* knotToSearch = primeiro;
+		NO* previousKnot = NULL;
+		while (knotToSearch->valor != valueToDelete && knotToSearch->prox != NULL) {
+			previousKnot = knotToSearch;
+			knotToSearch = knotToSearch->prox;
+		}
+		if(previousKnot == NULL){ //caso onde precisamos deletar o primeiro elemento
+			primeiro = primeiro->prox;
+			return;
+			if(knotToSearch->prox == NULL){ //caso onde precisamos deletar o Ãºnico elemento da lista
+				primeiro = NULL;
+				return;
+			}
+		}
+		if(knotToSearch->prox == NULL){//caso onde precisamos deletar o Ãºtlimo elemento
+			previousKnot->prox = NULL;
+			free(knotToSearch);
 			return;
 		}
-		return;
-	}
+		previousKnot->prox = knotToSearch->prox;
+		free(knotToSearch);
+		cout << "Lista atual\n";
+		exibirElementos();
+  }
 }
-
 void buscarElemento()
 {	
 	int valueToFind = 0;
@@ -186,7 +196,7 @@ void buscarElemento()
 
 
 // retorna um ponteiro para o elemento buscado
-// ou NULL se o elemento não estiver na lista
+// ou NULL se o elemento nï¿½o estiver na lista
 NO* posicaoElemento(int numero)
 {
 	NO* aux = primeiro;

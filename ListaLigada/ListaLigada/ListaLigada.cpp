@@ -127,7 +127,10 @@ void inserirElemento()
 	cout << "Digite o elemento: ";
 	cin >> novo->valor;
 	novo->prox = NULL;
-
+	if (posicaoElemento(novo->valor) != NULL) {
+		cout << "Esse valor já se encontra na lista\n";
+		return;
+	}
 	if (primeiro == NULL)
 	{
 		primeiro = novo;
@@ -145,14 +148,41 @@ void inserirElemento()
 
 void excluirElemento()
 {
-	
+	int valueToDelete = 0;
+	cout << "Digite o valor a ser deletado: \n";
+	cin >> valueToDelete;
+	NO* position = posicaoElemento(valueToDelete);
+	if (position == NULL) {
+		cout << "O valor não foi encontrado para ser deletado\n";
+		return;
+	}
+	if (position->prox != NULL) {
+		NO* nextKnot = position->prox;
+		if (nextKnot->prox != NULL) {
+			position->valor = nextKnot->valor;
+			position->prox = nextKnot->prox;
+			cout << "Lista atual\n";
+			exibirElementos();
+			return;
+		}
+		return;
+	}
 }
 
 void buscarElemento()
-{
-	
-}
+{	
+	int valueToFind = 0;
+	cout << "Digite um valor para ser buscado: ";
+	cin >> valueToFind;
 
+	NO* result = posicaoElemento(valueToFind);
+
+	if (result != NULL) {
+		cout << "O valor foi encontrado\n";
+		return;
+	}
+	cout << "O valor nao foi encontrado\n";
+}
 
 
 // retorna um ponteiro para o elemento buscado
